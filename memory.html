@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory</title>
+    <style>
+        #game {
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            grid-gap: 10px;
+        }
+        .tile {
+            outline: 1px solid black;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game"></div>
+    <script>
+        const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
+        const doubleColors = [...colors, ...colors];
+        let gameState = 
+        doubleColors.sort((a,b) => 0.5 - Math.random());
+
+        doubleColors.forEach(color => {
+            const div = document.createElement('div');
+            div.classList.add('tile', color);
+            document.getElementById('game').appendChild(div);
+        });
+
+        add_events();
+
+        function add_events() {
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('.tile');
+
+                if(target) {
+                    turn_tile(target);
+                }
+            })
+        }
+
+        function turn_tile(target) {
+            target.style.backgroundColor = target.classList[1];
+            is_other_card_visible();
+
+            console.log(target);
+        }
+
+        function is_other_card_visible() {
+
+        }
+    </script>
+</body>
+</html>
