@@ -17,11 +17,17 @@
     </style>
 </head>
 <body>
+    <div class="score">
+        <p>pogingen: <span id="scoreValue">0</span></p>
+    </div>
     <div id="game"></div>
     <script>
         const colors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple'];
         const doubleColors = [...colors, ...colors];
-        let gameState = 
+        let correctMatches = [];
+        let gameState = { firstCard: null };
+        let score = 0;
+
         doubleColors.sort((a,b) => 0.5 - Math.random());
 
         doubleColors.forEach(color => {
@@ -43,15 +49,69 @@
         }
 
         function turn_tile(target) {
-            target.style.backgroundColor = target.classList[1];
-            is_other_card_visible();
+            const color = target.classList[1];
+            target.style.backgroundColor = color;
+            
+            if (is_saved_color_set()) {
+                if (is_saved_color_same_as_clicked_color(color)) {
+                    add_to_correct_matches(color);
+                    clear_saved_color();
+                } else {
+                    setTimeout(() => {
+                        turn_back_not_matched_tiles(color);
+                        clear_saved_color();
+                    }, 1500);
+                }
 
-            console.log(target);
+                score_plus_one();
+            } else {
+                set_saved_color(color);
+            }
         }
 
-        function is_other_card_visible() {
-
+        function save_color_if_not_yet_saved() {
+            if (gameState.firstCard === null) {
+                gameState.firstCard = color;
+            }
         }
+
+        function is_saved_color_same_as_clicked_color (color) {
+            return gameState.firstCard === color;
+        }
+
+        function clear_saved_color() {
+            gameState.firstCard = null;
+        }
+
+        function is_saved_color_set() {
+            return !!gameState.firstCard;
+        }
+
+        function add_to_correct_matches(color) {
+            correctMatches.push(color);
+        }
+
+        function set_saved_color(color) {
+            gameState.firstCard = color;
+        }
+
+        function turn_back_not_matched_tiles(color) {
+            console.log(color, gameState.firstCard)
+            let elements = document.querySelectorAll('.' + color);
+            elements.forEach(element => {
+                element.style.backgroundColor = 'white';
+            });
+
+            let elements2 = document.querySelectorAll('.' + gameState.firstCard);
+            elements2.forEach(element => {
+                element.style.backgroundColor = 'white';
+            });
+        }
+
+        function score_plus_one() {
+            document.getElementById('scoreValue').innerHTML = score++;
+        }
+
     </script>
 </body>
 </html>
